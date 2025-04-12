@@ -22,55 +22,55 @@ import java.util.Optional;
 public class DemoApplication {
 
 
-    @Autowired
-    private FileRepository fileRepository;
-
-    @PostMapping(path = "/upload2", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> handleFileUploadInDB(@RequestParam("file") MultipartFile file) {
-        try {
-            FileEntity fileEntity = new FileEntity();
-            fileEntity.setName(file.getOriginalFilename());
-            fileEntity.setType(file.getContentType());
-            fileEntity.setData(file.getBytes());
-
-            fileRepository.save(fileEntity);
-
-            return ResponseEntity.ok("The upload was saved in database successfully!");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
-        }
-    }
-
-
-    @GetMapping("/download/{id}")
-    public ResponseEntity<?> downloadFile(@PathVariable Long id) {
-        Optional<FileEntity> file = fileRepository.findById(id);
-
-        if (file.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("FIle not found");
-        }
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.get().getName() + "\"")
-                .contentType(MediaType.parseMediaType(file.get().getType()))
-                .body(file.get().getData());
-    }
-
-
-    @PostMapping(path = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) {
-
-        String fileName = file.getOriginalFilename();
-        try {
-            file.transferTo(new File("C:\\Users\\Sorin Turda\\Desktop\\temp\\fisiere\\demo\\uploads\\" + fileName));
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
-        return ResponseEntity.ok("File uploaded successfully");
-    }
+//    @Autowired
+//    private FileRepository fileRepository;
+//
+//    @PostMapping(path = "/upload2", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public ResponseEntity<?> handleFileUploadInDB(@RequestParam("file") MultipartFile file) {
+//        try {
+//            FileEntity fileEntity = new FileEntity();
+//            fileEntity.setName(file.getOriginalFilename());
+//            fileEntity.setType(file.getContentType());
+//            fileEntity.setData(file.getBytes());
+//
+//            fileRepository.save(fileEntity);
+//
+//            return ResponseEntity.ok("The upload was saved in database successfully!");
+//        } catch (IOException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+//        }
+//    }
+//
+//
+//    @GetMapping("/download/{id}")
+//    public ResponseEntity<?> downloadFile(@PathVariable Long id) {
+//        Optional<FileEntity> file = fileRepository.findById(id);
+//
+//        if (file.isEmpty()) {
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body("FIle not found");
+//        }
+//
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.get().getName() + "\"")
+//                .contentType(MediaType.parseMediaType(file.get().getType()))
+//                .body(file.get().getData());
+//    }
+//
+//
+//    @PostMapping(path = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) {
+//
+//        String fileName = file.getOriginalFilename();
+//        try {
+//            file.transferTo(new File("C:\\Users\\Sorin Turda\\Desktop\\temp\\fisiere\\demo\\uploads\\" + fileName));
+//        } catch (IOException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//
+//        return ResponseEntity.ok("File uploaded successfully");
+//    }
 
 
     public static void main(String[] args) {
