@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.FileEntity;
 import com.example.demo.entity.FileInfoDTO;
 import com.example.demo.service.FileService;
+import com.example.demo.service.MessagePublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,18 +20,22 @@ import java.util.Optional;
 @RequestMapping("/file")
 public class FileController {
     private final FileService fileService;
+    private final MessagePublisher messagePublisher;
 
     @Autowired
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService, MessagePublisher messagePublisher) {
         this.fileService = fileService;
+        this.messagePublisher = messagePublisher;
     }
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
         var saved = fileService.storeFile(file);
-        if(saved == null)
+        if (saved == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File with this name already exists!");
-        return ResponseEntity.ok(new FileInfoDTO(saved.getId(), saved.getName(), saved.getType()));
+        FileInfoDTO body = new FileInfoDTO(saved.getId(), saved.getName(), saved.getType());
+        messagePublisher.publish("your-channel", body);
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping("/upload-multiple")
@@ -80,7 +85,7 @@ public class FileController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException e){
+    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }
