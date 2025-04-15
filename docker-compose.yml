@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   listener:
@@ -10,8 +10,8 @@ services:
       - maven-repo:/root/.m2
     ports:
       - 5000:8080
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
     networks:
       - mynet
     depends_on: 
@@ -26,8 +26,8 @@ services:
       - maven-repo:/root/.m2
     ports:
       - 5001:8080
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
     networks:
       - mynet
     depends_on: 
@@ -37,7 +37,7 @@ services:
     container_name: 'guide-redis'
     image: 'redis:latest'
     ports:
-      - '6379:6379'
+      - 6379:6379
     networks:
       - mynet
 
