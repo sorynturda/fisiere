@@ -9,9 +9,7 @@ services:
       - ./demo:/app
       - maven-repo:/root/.m2
     ports:
-      - 5000:8080
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
+      - 5001:8080
     networks:
       - mynet
     depends_on: 
@@ -25,9 +23,7 @@ services:
       - ./demo1:/app
       - maven-repo:/root/.m2
     ports:
-      - 5001:8080
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
+      - 5000:8080
     networks:
       - mynet
     depends_on: 
@@ -37,7 +33,7 @@ services:
     container_name: 'guide-redis'
     image: 'redis:latest'
     ports:
-      - 6379:6379
+      - 1234:6379
     networks:
       - mynet
 
